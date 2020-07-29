@@ -25,3 +25,4 @@ ONLINE = "Estoy con vida"
 
 [BOT]
 TOKEN = "1388812051:AAGUR4Z8u8kPQueHH_aHJD3tfPph21BK3NU"
+DATA_BASE = "FyCENBot.sqlite3"

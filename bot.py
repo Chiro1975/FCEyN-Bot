@@ -171,7 +171,8 @@ def listarOtros(update, context):
 
 global TOKEN
 TOKEN = DATA_DICT["BOT"]["TOKEN"].strip()
-#Funcion para comprobar que el TOKEN este bien inicializado 
+DATA_BASE = DATA_DICT["BOT"]["DATA_BASE"].strip()
+#Funcion para comprobar que el TOKEN este bien inicializado
 #TOKEN = checkToken()
 
 #Conecta el bot con Telegram
@@ -182,7 +183,7 @@ dispatcher = updater.dispatcher
 handlerInit()
 
 # Inicializa la base de datos cargada en el directorio
-init_db("FyCENBot.sqlite3")
+init_db(DATA_BASE)
 
 # No usar, funciones para cargar la base de datos
 # completarBaseFisica()

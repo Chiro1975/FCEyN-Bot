@@ -1,12 +1,19 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+#Libraries
 import os.path
 import sys
+import requests
+from io import BytesIO
 
-import telegram
+#Files
 from base import *
-from baseData import *
+
+
+#Telegram
+import telegram
+#from baseData import *
 from telegram.ext import (
      Updater,
      CommandHandler
@@ -19,10 +26,6 @@ from telegram import (
 )
 
 # Seccion de constantes:
-# Idea para TOKEN: Que el bot lea un archivo de texto, en vez de hardcodearlo.
-TOKEN = ''
-
-#TOKEN  = '672449039:AAGYmzWUTU33DtvawyFyekhY9U1yMV4ZcRo'
 
 # Estaria bueno poner estos mensajes en un archivo aparte
 WELCOME_MESSAGE = "¡Hola! Escribi /help si no sabes los comandos"
@@ -43,26 +46,22 @@ HELP_MESSAGE = ("/aplicada Correlativas en la orientación aplicada \n" +
                 "/pura Correlativas en la orientación pura \n")
 ONLINE_MESSAGE = "Estoy con vida"
 
+TOKEN_FILE_PATH = './token.txt'
+IMG = 'img/'
+PATH_CORRELATIVA_PURA = IMG + 'correlativas-pura.jpg'
+PATH_CORRELATIVA_APLICADA = IMG + 'correlativas-aplicada.jpg'
 
+#Comprueba si existe el archivo del TOKEN, en caso que no, lo crea y avisa.
 def checkToken():
-    fileExists = os.path.isfile('./token.txt')
+    fileExists = os.path.isfile(TOKEN_FILE_PATH)
     if (fileExists):
-        tokenFile = open('./token.txt', 'r')
+        tokenFile = open(TOKEN_FILE_PATH, 'r')
         TOKEN = tokenFile.read().strip()
         return TOKEN
     else:
-        tokenFile = open('./token.txt', 'w+')
+        tokenFile = open(TOKEN_FILE_PATH, 'w+')
         print("No se ha detectado un token para el bot, inserte su token en el archivo token")
         sys.exit() 
-
-TOKEN = checkToken()
-print(TOKEN)
-
-
-updater = Updater(token=TOKEN, use_context=True)
-dispatcher = updater.dispatcher
-
- 
 
 
 def sendMessage(update, context, text):
@@ -88,27 +87,34 @@ def list_buttons(update, context, listable_type):
                                         reply_markup=reply_markup, quote=False)
         context.sent_messages.append(msg)
 
+def enviar_imagen(chat_id, context, file_path):
+    context.bot.sendChatAction(chat_id=chat_id, action=ChatAction.UPLOAD_PHOTO)
+    msg = context.bot.send_photo(chat_id=chat_id, photo=open(file_path, 'rb'), quote=False)
+    context.sent_messages.append(msg)        
+
 # Estaria bueno hacerlo mas bonito, con la base de datos
 def handlerInit():
-    start_handler = CommandHandler('start', start)
-    difusion_handler = CommandHandler('difusion', difusion)
+   
     help_handler = CommandHandler('help', help)
+    pura_handler = CommandHandler('pura', pura)
+    start_handler = CommandHandler('start', start)
     online_handler = CommandHandler('online', online)
+    difusion_handler = CommandHandler('difusion', difusion)
+    aplicada_handler = CommandHandler('aplicada', aplicada)
     francisco_handler = CommandHandler('bardearFrancisco', bardearFrancisco)
     listarFisica_handler = CommandHandler('listarfisica', listarfisica)
     listarmatematica_handler = CommandHandler('listarmatematica', listarmatematica)
     optativasMatematica_handler = CommandHandler('listaroptativasmatematica', optativasMatematica)
-    #pura_handler = CommandHandler('pura', pura)
-    dispatcher.add_handler(start_handler)
-    dispatcher.add_handler(difusion_handler)
+    dispatcher.add_handler(pura_handler)
     dispatcher.add_handler(help_handler)
+    dispatcher.add_handler(start_handler)
     dispatcher.add_handler(online_handler)
+    dispatcher.add_handler(difusion_handler)
+    dispatcher.add_handler(aplicada_handler)
     dispatcher.add_handler(francisco_handler)
     dispatcher.add_handler(listarFisica_handler)
     dispatcher.add_handler(listarmatematica_handler)
     dispatcher.add_handler(optativasMatematica_handler)
-    #dispatcher.add_handler(pura_handler)
-
 
 def start(update, context):
     sendMessage(update, context, WELCOME_MESSAGE)
@@ -122,26 +128,17 @@ def help(update, context):
 def online(update, context):
     sendMessage(update, context, ONLINE_MESSAGE)
                           
-
 def bardearFrancisco(update, context):
     francisco = ["recursante infinito", "tenes olor a CBC", "cantaste Victoria antes de tiempo", "deja de dividir por 0", "sos más bobo que una segunda capa de pintura", "sos más trivial que el anillo {0}", "Matusalen se va a recibir antes que vos", "mereces hacer toda la carrera con Guccione", "hasta un bot te putea, ni el te quiere"]
     franciscoSend = "Che @Fran2_16, "+ francisco[0]
     sendMessage(update, context, franciscoSend)
-
-# NO ANDAN
-"""
-
-def enviar_imagen(chat_id, context, file_path):
-    context.bot.send_photo(chat_id = chat_id, photo=open(file_path, 'rb'))
-
+  
 
 def pura(update, context):
-    enviar_imagen(update, context, 'img/correlativas-pura.jpg')
+    enviar_imagen(update.message.chat_id, context, PATH_CORRELATIVA_PURA)
 
-
-"""
-
-
+def aplicada(update, context):
+    enviar_imagen(update.message.chat_id, context, PATH_CORRELATIVA_APLICADA)    
 
 
 def listarfisica(update, context):
@@ -158,10 +155,17 @@ def optativasMatematica(update, context):
 #TODO		
 '''
 def listarOtros(update, context):
-	#DJANGO! el vaquero negro.
+	#DJANGO! el vaquero negro del conourbano.
 '''
 
 
+global TOKEN
+#Funcion para comprobar que el TOKEN este bien inicializado 
+TOKEN = checkToken()
+
+#Conecta el bot con Telegram
+updater = Updater(token=TOKEN, use_context=True)
+dispatcher = updater.dispatcher
 
 # Funcion que se encarga de inicializar el patcher con todas las funciones
 handlerInit()

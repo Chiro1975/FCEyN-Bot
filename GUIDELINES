@@ -1,0 +1,14 @@
+Indiaciones para aportar al código de este bot:
+
+-- Respetar no usar más de 80-90 columnas, recordar usar "\" o paréntesis para
+   este fin.
+
+-- Usar 4 espacios para identar.
+
+-- 2 líneas antes y después de una definición (a menos que haya
+   que comentarla).
+
+-- Comentarios en castellano, variables en inglés:
+   GLOBAL_VARIABLE
+   CONSTANT
+   use_snake_case

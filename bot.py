@@ -28,7 +28,8 @@ from telegram import (
 
 # Seccion de constantes:
 
-# Estaria bueno poner estos mensajes en un archivo aparte
+# Original: Estaria bueno poner estos mensajes en un archivo aparte
+# Update: Hecho, dejo el comentario acá por si las dudas, hasta que no sea más necesario.
 '''
 WELCOME_MESSAGE = "¡Hola! Escribi /help si no sabes los comandos"
 DIFUSION_MESSAGE = ("Grupo para tareas de difusión de charlas de matematica: " +
@@ -47,7 +48,6 @@ HELP_MESSAGE = ("/aplicada Correlativas en la orientación aplicada \n" +
                 "/listarotros Muestra otros grupos \n" +
                 "/pura Correlativas en la orientación pura \n")
 ONLINE_MESSAGE = "Estoy con vida"
-<<<<<<< HEAD
 '''
 # Se carga el toml como un diccionario:
 DATA_DICT = toml.load("datos.toml")
@@ -55,7 +55,7 @@ WELCOME_MESSAGE = DATA_DICT["MESSAGES"] ["WELCOME"]
 DIFUSION_MESSAGE = DATA_DICT["MESSAGES"]["DIFUSION"]
 HELP_MESSAGE = DATA_DICT["MESSAGES"]["HELP"]
 ONLINE_MESSAGE = DATA_DICT["MESSAGES"]["ONLINE"]
-TOKEN_FILE_PATH = './token.txt'
+#TOKEN_FILE_PATH = './token.txt'
 IMG = 'img/'
 PATH_CORRELATIVA_PURA = IMG + 'correlativas-pura.jpg'
 PATH_CORRELATIVA_APLICADA = IMG + 'correlativas-aplicada.jpg'
@@ -128,16 +128,20 @@ def handlerInit():
 
 def start(update, context):
     sendMessage(update, context, WELCOME_MESSAGE)
-                             
+
+
 def difusion(update, context):
     sendMessage(update, context, DIFUSION_MESSAGE)
-                             
+
+
 def help(update, context):
     sendMessage(update, context, HELP_MESSAGE)
-                        
+
+   
 def online(update, context):
     sendMessage(update, context, ONLINE_MESSAGE)
-                          
+
+
 def bardearFrancisco(update, context):
     francisco = ["recursante infinito", "tenes olor a CBC", "cantaste Victoria antes de tiempo", "deja de dividir por 0", "sos más bobo que una segunda capa de pintura", "sos más trivial que el anillo {0}", "Matusalen se va a recibir antes que vos", "mereces hacer toda la carrera con Guccione", "hasta un bot te putea, ni el te quiere"]
     franciscoSend = "Che @Fran2_16, "+ francisco[0]
@@ -146,6 +150,7 @@ def bardearFrancisco(update, context):
 
 def pura(update, context):
     enviar_imagen(update.message.chat_id, context, PATH_CORRELATIVA_PURA)
+
 
 def aplicada(update, context):
     enviar_imagen(update.message.chat_id, context, PATH_CORRELATIVA_APLICADA)    
@@ -156,26 +161,28 @@ def listarfisica(update, context):
 
 
 def listarmatematica(update, context):
-	list_buttons(update, context, ListableMatematica)	
+    list_buttons(update, context, ListableMatematica)
 
 
 def optativasMatematica(update, context):
-	list_buttons(update, context, ListableMatematicaOptativa)
+    list_buttons(update, context, ListableMatematicaOptativa)
 
-#TODO		
+#TODO
 '''
 def listarOtros(update, context):
 	#DJANGO! el vaquero negro del conourbano.
 '''
 
 
-global TOKEN
+global TOKEN, DATA_BASE
 TOKEN = DATA_DICT["BOT"]["TOKEN"].strip()
 DATA_BASE = DATA_DICT["BOT"]["DATA_BASE"].strip()
-#Funcion para comprobar que el TOKEN este bien inicializado
-#TOKEN = checkToken()
+# Fran: Me parece que es redundante esta función, teniendo en cuenta que el bot
+# ni siquiera inicia con un token incorrecto.
+# Funcion para comprobar que el TOKEN este bien inicializado
+# TOKEN = checkToken()
 
-#Conecta el bot con Telegram
+# Conecta el bot con Telegram
 updater = Updater(token=TOKEN, use_context=True)
 dispatcher = updater.dispatcher
 
@@ -183,6 +190,7 @@ dispatcher = updater.dispatcher
 handlerInit()
 
 # Inicializa la base de datos cargada en el directorio
+# Me tomé la libertad de meterlo en el toml
 init_db(DATA_BASE)
 
 # No usar, funciones para cargar la base de datos

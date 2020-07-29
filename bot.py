@@ -10,7 +10,8 @@ from io import BytesIO
 #Files
 from base import *
 
-
+#Toml
+import toml
 #Telegram
 import telegram
 #from baseData import *
@@ -28,6 +29,7 @@ from telegram import (
 # Seccion de constantes:
 
 # Estaria bueno poner estos mensajes en un archivo aparte
+'''
 WELCOME_MESSAGE = "¡Hola! Escribi /help si no sabes los comandos"
 DIFUSION_MESSAGE = ("Grupo para tareas de difusión de charlas de matematica: " +
                     "https://t.me/joinchat/DLkiixM8QHt53Al_5ZYDjA" +
@@ -45,13 +47,21 @@ HELP_MESSAGE = ("/aplicada Correlativas en la orientación aplicada \n" +
                 "/listarotros Muestra otros grupos \n" +
                 "/pura Correlativas en la orientación pura \n")
 ONLINE_MESSAGE = "Estoy con vida"
-
+<<<<<<< HEAD
+'''
+# Se carga el toml como un diccionario:
+DATA_DICT = toml.load("datos.toml")
+WELCOME_MESSAGE = DATA_DICT["MESSAGES"] ["WELCOME"]
+DIFUSION_MESSAGE = DATA_DICT["MESSAGES"]["DIFUSION"]
+HELP_MESSAGE = DATA_DICT["MESSAGES"]["HELP"]
+ONLINE_MESSAGE = DATA_DICT["MESSAGES"]["ONLINE"]
 TOKEN_FILE_PATH = './token.txt'
 IMG = 'img/'
 PATH_CORRELATIVA_PURA = IMG + 'correlativas-pura.jpg'
 PATH_CORRELATIVA_APLICADA = IMG + 'correlativas-aplicada.jpg'
 
 #Comprueba si existe el archivo del TOKEN, en caso que no, lo crea y avisa.
+'''
 def checkToken():
     fileExists = os.path.isfile(TOKEN_FILE_PATH)
     if (fileExists):
@@ -62,7 +72,7 @@ def checkToken():
         tokenFile = open(TOKEN_FILE_PATH, 'w+')
         print("No se ha detectado un token para el bot, inserte su token en el archivo token")
         sys.exit() 
-
+'''
 
 def sendMessage(update, context, text):
     context.bot.send_message(chat_id=update.effective_chat.id,
@@ -160,8 +170,9 @@ def listarOtros(update, context):
 
 
 global TOKEN
+TOKEN = DATA_DICT["BOT"]["TOKEN"].strip()
 #Funcion para comprobar que el TOKEN este bien inicializado 
-TOKEN = checkToken()
+#TOKEN = checkToken()
 
 #Conecta el bot con Telegram
 updater = Updater(token=TOKEN, use_context=True)

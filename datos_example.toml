@@ -1,0 +1,14 @@
+[MESSAGES]
+WELCOME = ''
+
+DIFUSION = """
+
+                  """
+
+HELP = """ """
+
+ONLINE = ""
+
+[BOT]
+TOKEN = ""
+DATA_BASE = ""
